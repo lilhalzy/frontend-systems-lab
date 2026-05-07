@@ -1,20 +1,17 @@
-import { useState } from "react"
-
-const ProfileCard = ({name, role}) => {
-    const [followers, setFollowers] = useState(0)
-
-    const handleFollow = () => {
-        setFollowers(prev => prev + 1)
-    }
-
+const ProfileCard = ({name, role, online, followers, onFollow}) => {
     return (
         <section>
             <h2>{name}</h2>
             <p>{role}</p>
 
             <p>Followers: {followers}</p>
+            {
+                online
+                ? <p>Status: online 🟢</p>
+                : <p>Status: offline ⚫</p>
+            }
 
-            <button onClick={handleFollow}>Follow</button>
+            <button onClick={onFollow}>Follow</button>
         </section>
     )
 }
