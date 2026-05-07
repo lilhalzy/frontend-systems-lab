@@ -4,12 +4,14 @@ import Footer from "./components/Footer"
 
 function App() {
   return(
-    <main>
+    <div>
       <Header/>
-      <ProfileCard name="lilhalzy" role="A rotten Software Developer"/>
-      <ProfileCard name="Sarah" role="Electrical Engineering"/>
+      <main>
+        <ProfileCard name="lilhalzy" role="A rotten Software Developer"/>
+        <ProfileCard name="Sarah" role="Electrical Engineering"/>
+      </main>
       <Footer/>
-    </main>
+    </div>
   )
 }
 

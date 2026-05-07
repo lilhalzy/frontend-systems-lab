@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const ProfileCard = (name, role) => {
+const ProfileCard = ({name, role}) => {
     const [followers, setFollowers] = useState(0)
 
     const handleFollow = () => {
