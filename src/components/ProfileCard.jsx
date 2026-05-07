@@ -1,8 +1,8 @@
-const ProfileCard = () => {
+const ProfileCard = (props) => {
   return (
     <section>
-        <h2>lilhalzy</h2>
-        <p>A rotted Software Developer but regaining his prime once more</p>
+        <h2>{props.name}</h2>
+        <p>{props.role}</p>
     </section>
   )
 }

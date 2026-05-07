@@ -6,7 +6,8 @@ function App() {
   return(
     <main>
       <Header/>
-      <ProfileCard/>
+      <ProfileCard name="lilhalzy" role="A rotten Software Developer"/>
+      <ProfileCard name="Sarah" role="Electrical Engineering"/>
       <Footer/>
     </main>
   )
