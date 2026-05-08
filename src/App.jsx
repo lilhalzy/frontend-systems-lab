@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import Header from "./components/Header"
 import ProfileCard from "./components/ProfileCard"
 import Footer from "./components/Footer"
+import UserList from "./components/UserList"
 
 function App() {
   const [users, setUsers] = useState(() => {
@@ -107,6 +108,7 @@ function App() {
           />
         ))
       }
+      <UserList/>
       <Footer/>
     </div>
   )
