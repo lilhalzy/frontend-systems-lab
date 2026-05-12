@@ -15,6 +15,8 @@ function Users() {
   const [newUserName, setNewUserName] = useState('')
   const [newUserRole, setNewUserRole] = useState('')
 
+  const [formError, setFormError] = useState('')
+
   useEffect(() => {
     localStorage.setItem('users', JSON.stringify(users))
   }, [users])
@@ -38,7 +40,15 @@ function Users() {
     const trimmedName = newUserName.trim()
     const trimmedRole = newUserRole.trim()
 
-    if (!trimmedName || !trimmedRole) return
+    if (!trimmedName || !trimmedRole) {
+      setFormError('Name and role are required.')
+      return 
+    }
+
+    if (trimmedName.length < 3) {
+      setFormError('Name must be at least 3 characters.')
+      return
+    }
     
     const newUser = {
       id: crypto.randomUUID(),
@@ -55,6 +65,7 @@ function Users() {
     
     setNewUserName('')
     setNewUserRole('')
+    setFormError('')
   }
 
   const handleDeleteUser = (id) => {
@@ -103,6 +114,11 @@ function Users() {
             onDelete={() => handleDeleteUser(user.id)}
           />
         ))
+      }
+      {
+        formError && (
+          <p>{formError}</p>
+        )
       }
     </section>
   )
