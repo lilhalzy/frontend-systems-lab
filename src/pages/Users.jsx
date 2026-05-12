@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import ProfileCard from '../components/ProfileCard'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
+import useUserForm from '../hooks/useUserForm'
 
 function Users() {
   const [users, setUsers] = useState(() => {
@@ -12,13 +13,6 @@ function Users() {
       ? JSON.parse(savedUsers)
       : []
   })
-
-  const [formData, setFormData] = useState({
-    name: '',
-    role: '',
-  })
-
-  const [formError, setFormError] = useState('')
 
   useEffect(() => {
     localStorage.setItem('users', JSON.stringify(users))
@@ -37,68 +31,31 @@ function Users() {
     )
   }
 
-  const handleAddUser = (event) => {
-    event.preventDefault()
-
-    const trimmedName = formData.name.trim()
-    const trimmedRole = formData.role.trim()
-
-    if (!trimmedName || !trimmedRole) {
-      setFormError('Name and role are required.')
-      return 
-    }
-
-    if (trimmedName.length < 3) {
-      setFormError('Name must be at least 3 characters.')
-      return
-    }
-
-    if (trimmedRole.length < 3) {
-      setFormError('Role must be at least 3 characters.')
-      return
-    }
-    
-    const newUser = {
-      id: crypto.randomUUID(),
-      name: trimmedName,
-      role: trimmedRole,
-      online: false,
-      followers: 0,
-    }
-    
-    setUsers((prevUsers) => [
-      ...prevUsers,
-      newUser,
-    ])
-
-    setFormError('')
-    
-    setFormData({
-      name: '',
-      role: '',
-    })
-  }
-
   const handleDeleteUser = (id) => {
     setUsers((prevUsers) =>
       prevUsers.filter((user) => user.id !== id)
     )
   }
 
-  const handleInputChange = (e) => {
-    const {name, value} = e.target
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }))
+  const addUser = (newUser) => {
+    setUsers((prevUsers) => [
+      ...prevUsers,
+      newUser,
+    ])
   }
+
+  const {
+    formData,
+    formError,
+    handleInputChange,
+    handleSubmit,
+  } = useUserForm(addUser)
 
   return (
     <section>
       <h1>Users Page</h1>
 
-      <form onSubmit={handleAddUser}>
+      <form onSubmit={handleSubmit}>
         <Input
           name='name'
           placeholder='Enter name'
