@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import ProfileCard from '../components/ProfileCard'
 import Button from '../components/ui/Button'
+import Input from '../components/ui/Input'
 
 function Users() {
   const [users, setUsers] = useState(() => {
@@ -79,8 +80,7 @@ function Users() {
       <h1>Users Page</h1>
 
       <form onSubmit={handleAddUser}>
-        <input
-          type="text"
+        <Input
           placeholder="Enter name"
           value={newUserName}
           onChange={(e) =>
@@ -88,8 +88,7 @@ function Users() {
           }
         />
 
-        <input
-          type="text"
+        <Input
           placeholder="Enter role"
           value={newUserRole}
           onChange={(e) =>
