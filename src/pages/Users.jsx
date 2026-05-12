@@ -13,8 +13,10 @@ function Users() {
       : []
   })
 
-  const [newUserName, setNewUserName] = useState('')
-  const [newUserRole, setNewUserRole] = useState('')
+  const [formData, setFormData] = useState({
+    name: '',
+    role: '',
+  })
 
   const [formError, setFormError] = useState('')
 
@@ -38,8 +40,8 @@ function Users() {
   const handleAddUser = (event) => {
     event.preventDefault()
 
-    const trimmedName = newUserName.trim()
-    const trimmedRole = newUserRole.trim()
+    const trimmedName = formData.name.trim()
+    const trimmedRole = formData.role.trim()
 
     if (!trimmedName || !trimmedRole) {
       setFormError('Name and role are required.')
@@ -48,6 +50,11 @@ function Users() {
 
     if (trimmedName.length < 3) {
       setFormError('Name must be at least 3 characters.')
+      return
+    }
+
+    if (trimmedRole.length < 3) {
+      setFormError('Role must be at least 3 characters.')
       return
     }
     
@@ -63,10 +70,13 @@ function Users() {
       ...prevUsers,
       newUser,
     ])
-    
-    setNewUserName('')
-    setNewUserRole('')
+
     setFormError('')
+    
+    setFormData({
+      name: '',
+      role: '',
+    })
   }
 
   const handleDeleteUser = (id) => {
@@ -75,25 +85,32 @@ function Users() {
     )
   }
 
+  const handleInputChange = (e) => {
+    const {name, value} = e.target
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
+
   return (
     <section>
       <h1>Users Page</h1>
 
       <form onSubmit={handleAddUser}>
         <Input
-          placeholder="Enter name"
-          value={newUserName}
-          onChange={(e) =>
-            setNewUserName(e.target.value)
-          }
+          name='name'
+          placeholder='Enter name'
+          value={formData.name}
+          onChange={handleInputChange}
         />
 
         <Input
-          placeholder="Enter role"
-          value={newUserRole}
-          onChange={(e) =>
-            setNewUserRole(e.target.value)
-          }
+          name='role'
+          placeholder='Enter role'
+          value={formData.role}
+          onChange={handleInputChange}
         />
 
         <Button type="submit">
@@ -101,6 +118,11 @@ function Users() {
         </Button>
       </form>
 
+      {
+        formError && (
+          <p>{formError}</p>
+        )
+      }
       {
         users.map((user) => (
           <ProfileCard
@@ -113,11 +135,6 @@ function Users() {
             onDelete={() => handleDeleteUser(user.id)}
           />
         ))
-      }
-      {
-        formError && (
-          <p>{formError}</p>
-        )
       }
     </section>
   )
