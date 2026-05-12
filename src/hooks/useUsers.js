@@ -33,6 +33,7 @@ const useUsers = () => {
 
     return {
         users,
+        setUsers,
         loading,
         error,
     }

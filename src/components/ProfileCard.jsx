@@ -1,4 +1,4 @@
-const ProfileCard = ({name, role, online, followers, onFollow}) => {
+const ProfileCard = ({name, role, online, followers, onFollow, onDelete}) => {
     return (
         <section>
             <h2>{name}</h2>
@@ -12,6 +12,7 @@ const ProfileCard = ({name, role, online, followers, onFollow}) => {
             }
 
             <button onClick={onFollow}>Follow</button>
+            <button onClick={onDelete}>Delete</button>
         </section>
     )
 }
