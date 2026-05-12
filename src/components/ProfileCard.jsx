@@ -1,3 +1,5 @@
+import Button from "./ui/Button"
+
 const ProfileCard = ({name, role, online, followers, onFollow, onDelete}) => {
     return (
         <section>
@@ -11,8 +13,8 @@ const ProfileCard = ({name, role, online, followers, onFollow, onDelete}) => {
                 : <p>Status: offline ⚫</p>
             }
 
-            <button onClick={onFollow}>Follow</button>
-            <button onClick={onDelete}>Delete</button>
+            <Button onClick={onFollow}>Follow</Button>
+            <Button onClick={onDelete}>Delete</Button>
         </section>
     )
 }

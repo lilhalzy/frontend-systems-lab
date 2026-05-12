@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import ProfileCard from '../components/ProfileCard'
+import Button from '../components/ui/Button'
 
 function Users() {
   const [users, setUsers] = useState(() => {
@@ -37,9 +38,7 @@ function Users() {
     const trimmedName = newUserName.trim()
     const trimmedRole = newUserRole.trim()
 
-    if (!trimmedName || !trimmedRole) {
-      return
-    }
+    if (!trimmedName || !trimmedRole) return
     
     const newUser = {
       id: crypto.randomUUID(),
@@ -87,9 +86,9 @@ function Users() {
           }
         />
 
-        <button type="submit">
+        <Button type="submit">
           Add User
-        </button>
+        </Button>
       </form>
 
       {
