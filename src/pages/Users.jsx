@@ -1,22 +1,11 @@
-import { useEffect, useState } from 'react'
-
 import ProfileCard from '../components/ProfileCard'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import useUserForm from '../hooks/useUserForm'
+import { useUserContext } from '../context/UsersContext'
 
 function Users() {
-  const [users, setUsers] = useState(() => {
-    const savedUsers = localStorage.getItem('users')
-
-    return savedUsers
-      ? JSON.parse(savedUsers)
-      : []
-  })
-
-  useEffect(() => {
-    localStorage.setItem('users', JSON.stringify(users))
-  }, [users])
+  const {users, setUsers} = useUserContext()
 
   const handleFollow = (id) => {
     setUsers((prevUsers) =>
