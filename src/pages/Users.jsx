@@ -5,32 +5,27 @@ import useUserForm from '../hooks/useUserForm'
 import { useUserContext } from '../context/UsersContext'
 
 function Users() {
-  const {users, setUsers} = useUserContext()
-
+  const {users, dispatch} = useUserContext()
+  
   const handleFollow = (id) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) =>
-        user.id === id
-          ? {
-              ...user,
-              followers: user.followers + 1,
-            }
-          : user
-      )
-    )
+    dispatch({
+      type: 'FOLLOW_USER',
+      payload: id,
+    })
   }
 
   const handleDeleteUser = (id) => {
-    setUsers((prevUsers) =>
-      prevUsers.filter((user) => user.id !== id)
-    )
+    dispatch({
+      type: 'DELETE_USER',
+      payload: id,
+    })
   }
 
   const addUser = (newUser) => {
-    setUsers((prevUsers) => [
-      ...prevUsers,
-      newUser,
-    ])
+    dispatch({
+      type: 'ADD_USER',
+      payload: newUser,
+    })
   }
 
   const {
