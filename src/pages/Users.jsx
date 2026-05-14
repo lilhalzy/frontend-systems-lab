@@ -2,10 +2,16 @@ import ProfileCard from '../components/ProfileCard'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import useUserForm from '../hooks/useUserForm'
-import { useUserContext } from '../context/UsersContext'
+import { useUsersContext } from '../context/UsersContext'
 
 function Users() {
-  const {users, dispatch} = useUserContext()
+  const {state, dispatch} = useUsersContext()
+  
+  const {
+    users,
+    loading,
+    error,  
+  } = state
   
   const handleFollow = (id) => {
     dispatch({
@@ -34,6 +40,14 @@ function Users() {
     handleInputChange,
     handleSubmit,
   } = useUserForm(addUser)
+  
+  if (loading) {
+    return <p>Loading...</p>
+  }
+  
+  if (error) {
+    return <p>{error}</p>
+  }
 
   return (
     <section>
