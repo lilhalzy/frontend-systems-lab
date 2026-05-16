@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useReducer } from "react"
 import { usersReducer, initialState } from "../reducers/usersReducer"
+import { fetchUsers, saveUsers } from "../services/usersService"
+import { fetchUsersStart, fetchUsersSuccess, fetchUsersError } from "../actions/usersActions"
 
 const UsersContext = createContext()
 
@@ -21,42 +23,24 @@ const UsersContext = createContext()
       )
     
     useEffect(() => {
-      const fetchUsers = async () => {
-        dispatch({
-          type: 'FETCH_USERS_START',
-        })
+      const getUsers = async () => {
+        dispatch(fetchUsersStart())
         
         try {
-          await new Promise((resolve) => 
-            setTimeout(resolve, 1000)
-        )
-        
-        const savedUsers = localStorage.getItem('users')
-        
-        const users = savedUsers
-        ? JSON.parse(savedUsers)
-        : []
-        
-        dispatch({
-          type: 'FETCH_USERS_SUCCESS',
-          payload: users,
-        })  
+          const users = await fetchUsers()
+          
+          dispatch(fetchUsersSuccess(users))
+
       } catch (err) {
-        dispatch({
-          type: 'FETCH_USERS_ERROR',
-          payload: err.message,
-        })
+          dispatch(fetchUsersError(err.message))
       }
     }
     
-    fetchUsers()
+    getUsers()
   }, [])
   
   useEffect(() => {
-    localStorage.setItem(
-      'users',
-      JSON.stringify(state.users)
-    )
+    saveUsers(state.users)
   }, [state.users])
   
   return (
