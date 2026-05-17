@@ -5,16 +5,16 @@ import useUserForm from '../hooks/useUserForm'
 import { useUsersContext } from '../context/UsersContext'
 import { createUser } from '../services/usersService'
 import { followUser, deleteUser, removeUser, confirmUser,addUser as addUserAction } from '../actions/usersActions'
-
+import useUsersQuery from '../hooks/useUsersQuery'
 
 function Users() {
-  const {state, dispatch} = useUsersContext()
+  const {dispatch} = useUsersContext()
   
-  const {
-    users,
-    loading,
-    error,  
-  } = state
+const {
+  data: users = [],
+  isLoading,
+  error,
+} = useUsersQuery()
   
   const handleFollow = (id) => {
     dispatch(followUser(id))
@@ -44,7 +44,7 @@ function Users() {
     handleSubmit,
   } = useUserForm(addUser)
   
-  if (loading) {
+  if (isLoading) {
     return <p>Loading...</p>
   }
   
