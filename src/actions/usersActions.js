@@ -1,51 +1,38 @@
-export const addUser = (user) => {
-  return {
-    type: 'ADD_USER',
-    payload: user,
-  }
-}
+export const addUser = (user) => ({
+  type: 'ADD_USER',
+  payload: user,
+})
 
-export const deleteUser = (id) => {
-  return {
-    type: 'DELETE_USER',
-    payload: id,
-  }
-}
+export const deleteUser = (id) => ({
+  type: 'DELETE_USER',
+  payload: id,
+})
 
-export const followUser = (id) => {
-  return {
-    type: 'FOLLOW_USER',
-    payload: id,
-  }
-}
+export const followUser = (id) => ({
+  type: 'FOLLOW_USER',
+  payload: id,
+})
 
-export const fetchUsersStart = () => {
-  return {
-    type: 'FETCH_USERS_START',
-  }
-}
+export const fetchUsersStart = () => ({
+  type: 'FETCH_USERS_START',
+})
 
-export const fetchUsersSuccess = (
-  users
-) => {
-  return {
-    type: 'FETCH_USERS_SUCCESS',
-    payload: users,
-  }
-}
+export const fetchUsersSuccess = (users) => ({
+  type: 'FETCH_USERS_SUCCESS',
+  payload: users,
+})
 
-export const fetchUsersError = (
-  error
-) => {
-  return {
-    type: 'FETCH_USERS_ERROR',
-    payload: error,
-  }
-}
+export const fetchUsersError = (error) => ({
+  type: 'FETCH_USERS_ERROR',
+  payload: error,
+})
 
-export const rollbackUsers = (previousUsers) => {
-  return {
-    type: 'ROLLBACK_USERS',
-    payload: previousUsers,
-  }
-}
+export const confirmUser = (userId) => ({
+  type: 'CONFIRM_USER',
+  payload: userId,
+})
+
+export const removeUser = (userId) => ({
+  type: 'REMOVE_USER',
+  payload: userId,
+})
