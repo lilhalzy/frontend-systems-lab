@@ -44,6 +44,7 @@ const useUserForm = (onAddUser) => {
       role: trimmedRole,
       online: false,
       followers: 0,
+      pending: true,
     })
 
     setFormError('')

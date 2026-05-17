@@ -4,7 +4,7 @@ import Input from '../components/ui/Input'
 import useUserForm from '../hooks/useUserForm'
 import { useUsersContext } from '../context/UsersContext'
 import { createUser } from '../services/usersService'
-import { rollbackUsers, followUser, deleteUser, addUser as addUserAction, } from '../actions/usersActions'
+import { followUser, deleteUser, removeUser, confirmUser,addUser as addUserAction } from '../actions/usersActions'
 
 
 function Users() {
@@ -25,15 +25,14 @@ function Users() {
   }
 
   const addUser = async (newUser) => {
-    const previousUsers = users
-
     dispatch(addUserAction(newUser))
 
     try {
       await createUser(newUser)
-    } catch (err) { 
-      dispatch(rollbackUsers(previousUsers))
+      dispatch(confirmUser(newUser.id))
 
+    } catch (err) { 
+      dispatch(removeUser(newUser.id))
       console.error(err.message)
     }
   }

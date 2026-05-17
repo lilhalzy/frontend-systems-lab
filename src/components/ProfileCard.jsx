@@ -1,6 +1,6 @@
 import Button from "./ui/Button"
 
-const ProfileCard = ({name, role, online, followers, onFollow, onDelete}) => {
+const ProfileCard = ({name, role, online, followers, onFollow, onDelete, pending}) => {
     return (
         <section>
             <h2>{name}</h2>
@@ -11,6 +11,9 @@ const ProfileCard = ({name, role, online, followers, onFollow, onDelete}) => {
                 online
                 ? <p>Status: online 🟢</p>
                 : <p>Status: offline ⚫</p>
+            }
+            {
+                pending && <p>Saving</p>
             }
 
             <Button onClick={onFollow}>Follow</Button>

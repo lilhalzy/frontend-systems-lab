@@ -61,6 +61,27 @@ export const usersReducer = (state, action) => {
         ...state,
         users: action.payload,
       }
+
+      case 'CONFIRM_USER': 
+      return {
+        ...state,
+        users: state.users.map(
+          (user) => user.id === action.payload
+          ? {
+            ...user,
+            pending: false,
+          }
+          : user
+        ),
+      }
+
+      case 'REMOVE_USER': 
+      return {
+        ...state,
+        users: state.users.filter(
+          (user) => user.id !== action.payload
+        ),
+      }
       
       default:
         return state
