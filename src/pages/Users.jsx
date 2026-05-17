@@ -3,6 +3,9 @@ import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import useUserForm from '../hooks/useUserForm'
 import { useUsersContext } from '../context/UsersContext'
+import { createUser } from '../services/usersService'
+import { rollbackUsers, followUser, deleteUser, addUser as addUserAction, } from '../actions/usersActions'
+
 
 function Users() {
   const {state, dispatch} = useUsersContext()
@@ -14,24 +17,25 @@ function Users() {
   } = state
   
   const handleFollow = (id) => {
-    dispatch({
-      type: 'FOLLOW_USER',
-      payload: id,
-    })
+    dispatch(followUser(id))
   }
 
   const handleDeleteUser = (id) => {
-    dispatch({
-      type: 'DELETE_USER',
-      payload: id,
-    })
+    dispatch(deleteUser(id))
   }
 
-  const addUser = (newUser) => {
-    dispatch({
-      type: 'ADD_USER',
-      payload: newUser,
-    })
+  const addUser = async (newUser) => {
+    const previousUsers = users
+
+    dispatch(addUserAction(newUser))
+
+    try {
+      await createUser(newUser)
+    } catch (err) { 
+      dispatch(rollbackUsers(previousUsers))
+
+      console.error(err.message)
+    }
   }
 
   const {

@@ -42,3 +42,10 @@ export const fetchUsersError = (
     payload: error,
   }
 }
+
+export const rollbackUsers = (previousUsers) => {
+  return {
+    type: 'ROLLBACK_USERS',
+    payload: previousUsers,
+  }
+}

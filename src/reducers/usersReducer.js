@@ -55,6 +55,12 @@ export const usersReducer = (state, action) => {
           : user
         ),
       }
+
+    case 'ROLLBACK_USERS': 
+      return {
+        ...state,
+        users: action.payload,
+      }
       
       default:
         return state

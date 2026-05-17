@@ -17,3 +17,17 @@ export const saveUsers = (users) => {
     JSON.stringify(users)
   )
 }
+
+export const createUser = async(user) => {
+  await new Promise((resolve) => 
+    setTimeout(resolve, 1000)
+  )
+
+  const shouldFail = Math.random() < 0.5
+
+  if (shouldFail) {
+    throw new Error('Failed to create user')
+  }
+
+  return user
+}
