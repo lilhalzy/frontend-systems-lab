@@ -3,18 +3,19 @@ import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import useUserForm from '../hooks/useUserForm'
 import { useUsersContext } from '../context/UsersContext'
-import { createUser } from '../services/usersService'
-import { followUser, deleteUser, removeUser, confirmUser,addUser as addUserAction } from '../actions/usersActions'
+import { followUser, deleteUser } from '../actions/usersActions'
 import useUsersQuery from '../hooks/useUsersQuery'
+import useAddUserMutation from '../hooks/useAddUserMutation'
 
 function Users() {
   const {dispatch} = useUsersContext()
+  const addUserMutation = useAddUserMutation() 
   
-const {
+  const {
   data: users = [],
   isLoading,
   error,
-} = useUsersQuery()
+  } = useUsersQuery()
   
   const handleFollow = (id) => {
     dispatch(followUser(id))
@@ -25,14 +26,9 @@ const {
   }
 
   const addUser = async (newUser) => {
-    dispatch(addUserAction(newUser))
-
     try {
-      await createUser(newUser)
-      dispatch(confirmUser(newUser.id))
-
-    } catch (err) { 
-      dispatch(removeUser(newUser.id))
+      await addUserMutation.mutateAsync(newUser)
+    } catch (err) {
       console.error(err.message)
     }
   }
@@ -71,8 +67,11 @@ const {
           onChange={handleInputChange}
         />
 
-        <Button type="submit">
-          Add User
+        <Button 
+          type="submit"
+          disabled={addUserMutation.isPending}  
+        >
+          {addUserMutation.isPending ? 'Adding...' : 'Add User'}
         </Button>
       </form>
 
