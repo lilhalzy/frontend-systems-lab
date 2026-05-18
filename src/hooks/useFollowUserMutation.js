@@ -1,9 +1,5 @@
-import {
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {useMutation,useQueryClient} from '@tanstack/react-query'
 import { followUser } from '../services/usersService'
-
 
 const useFollowUserMutation = () => {
   const queryClient = useQueryClient()
@@ -39,11 +35,7 @@ const useFollowUserMutation = () => {
       return { previousUsers }
     },
 
-    onError: (
-      err,
-      userId,
-      context
-    ) => {
+    onError: (err, userId, context) => {
       queryClient.setQueryData(
         ['users'],
         context.previousUsers

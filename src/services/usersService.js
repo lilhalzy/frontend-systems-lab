@@ -1,41 +1,33 @@
 export const fetchUsers =  async () => {
-  await new Promise((resolve) =>
-    setTimeout(resolve, 1000)
-  )
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  const savedUsers = localStorage.getItem('users')
 
-  const savedUsers =
-    localStorage.getItem('users')
-
-  return savedUsers
-    ? JSON.parse(savedUsers)
-    : []
+  return savedUsers ? JSON.parse(savedUsers) : []
 }
 
 export const saveUsers = (users) => {
-  localStorage.setItem(
-    'users',
-    JSON.stringify(users)
-  )
+  localStorage.setItem('users',JSON.stringify(users))
 }
 
-export const createUser = async(user) => {
-  await new Promise((resolve) => 
-    setTimeout(resolve, 1000)
-  )
-
-  const shouldFail = Math.random() < 0.5
-
-  if (shouldFail) {
-    throw new Error('Failed to create user')
-  }
-
-  return user
-}
-
-export const followUser = async(userId) => {
+export const createUser = async(newUser) => {
   await new Promise((resolve) => 
     setTimeout(resolve, 500)
   )
+
+  const savedUsers = localStorage.getItem('users')
+  const users = savedUsers 
+    ? JSON.parse(savedUsers)
+    : []
+  const updatedUsers = [...users, newUser] 
+
+  localStorage.setItem('users', JSON.stringify(updatedUsers))
+
+  return newUser
+}
+
+
+export const followUser = async(userId) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
 
   const savedUsers = localStorage.getItem('users')
   const users = savedUsers ? JSON.parse(savedUsers) : []
