@@ -3,13 +3,15 @@ import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import useUserForm from '../hooks/useUserForm'
 import { useUsersContext } from '../context/UsersContext'
-import { followUser, deleteUser } from '../actions/usersActions'
+import { deleteUser } from '../actions/usersActions'
 import useUsersQuery from '../hooks/useUsersQuery'
 import useAddUserMutation from '../hooks/useAddUserMutation'
+import useFollowUserMutation from '../hooks/useFollowUserMutation'
 
 function Users() {
   const {dispatch} = useUsersContext()
   const addUserMutation = useAddUserMutation() 
+  const followUserMutation = useFollowUserMutation()
   
   const {
   data: users = [],
@@ -17,8 +19,12 @@ function Users() {
   error,
   } = useUsersQuery()
   
-  const handleFollow = (id) => {
-    dispatch(followUser(id))
+  const handleFollow = async (id) => {
+    try {
+      await followUserMutation.mutateAsync(id)
+    } catch (err) {
+      console.error(err.message)
+    }
   }
 
   const handleDeleteUser = (id) => {
