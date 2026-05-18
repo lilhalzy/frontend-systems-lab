@@ -2,15 +2,12 @@ import ProfileCard from '../components/ProfileCard'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import useUserForm from '../hooks/useUserForm'
-import { useUsersContext } from '../context/UsersContext'
-import { deleteUser } from '../actions/usersActions'
 import useUsersQuery from '../hooks/useUsersQuery'
 import useAddUserMutation from '../hooks/useAddUserMutation'
 import useFollowUserMutation from '../hooks/useFollowUserMutation'
 import useDeleteUserMutation from '../hooks/useDeleteUserMutation'
 
 function Users() {
-  const {dispatch} = useUsersContext()
   const addUserMutation = useAddUserMutation() 
   const followUserMutation = useFollowUserMutation()
   const deleteUserMutation = useDeleteUserMutation()

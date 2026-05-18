@@ -6,9 +6,32 @@ export const useAddUserMutation = () => {
 
   return useMutation({
     mutationFn: createUser,
-    onSuccess: () => {
+
+    onMutate: async (newUser) => {
+      await queryClient.cancelQueries({
+        queryKey: ['users'],
+      })
+
+      const previousUsers = queryClient.getQueryData([
+        'users',
+      ])
+
+      queryClient.setQueryData(['users'], (oldUsers = []) => {
+        return [...oldUsers, newUser]
+      })
+
+      return { previousUsers }
+    },
+
+    onError: (err, newUser, context) => {
+      queryClient.setQueryData(['users'], context.previousUsers)
+
+      console.error(err.message)
+    },
+
+    onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ['users']
+        queryKey: ['users'],
       })
     },
   })
