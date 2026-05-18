@@ -25,7 +25,6 @@ export const createUser = async(newUser) => {
   return newUser
 }
 
-
 export const followUser = async(userId) => {
   await new Promise((resolve) => setTimeout(resolve, 500))
 
@@ -40,4 +39,16 @@ export const followUser = async(userId) => {
   localStorage.setItem('users', JSON.stringify(updatedUsers))
 
   return updatedUsers
+}
+
+export const deleteUser = async(userId) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+
+  const savedUsers = localStorage.getItem('users')
+  const users = savedUsers ? JSON.parse(savedUsers) : []  
+  const updatedUsers = users.filter((user) => user.id !== userId)
+
+  localStorage.setItem('users', JSON.stringify(updatedUsers))
+
+  return userId
 }

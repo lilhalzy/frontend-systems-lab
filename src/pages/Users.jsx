@@ -7,11 +7,13 @@ import { deleteUser } from '../actions/usersActions'
 import useUsersQuery from '../hooks/useUsersQuery'
 import useAddUserMutation from '../hooks/useAddUserMutation'
 import useFollowUserMutation from '../hooks/useFollowUserMutation'
+import useDeleteUserMutation from '../hooks/useDeleteUserMutation'
 
 function Users() {
   const {dispatch} = useUsersContext()
   const addUserMutation = useAddUserMutation() 
   const followUserMutation = useFollowUserMutation()
+  const deleteUserMutation = useDeleteUserMutation()
   
   const {
   data: users = [],
@@ -27,8 +29,12 @@ function Users() {
     }
   }
 
-  const handleDeleteUser = (id) => {
-    dispatch(deleteUser(id))
+  const handleDeleteUser = async (id) => {
+    try {
+      await deleteUserMutation.mutateAsync(id)
+    } catch (err) {
+      console.error(err.message)
+    }
   }
 
   const addUser = async (newUser) => {
