@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteUser } from "../services/usersService";
+import { usersQueries } from "../usersQueries";
 
 const useDeleteUserMutation = () => {
   const queryClient = useQueryClient();
@@ -9,12 +10,12 @@ const useDeleteUserMutation = () => {
 
     onMutate: async (userId) => {
       await queryClient.cancelQueries({
-        queryKey: ["users"],
+        queryKey: usersQueries.all().queryKey,
       });
 
-      const previousUsers = queryClient.getQueryData(["users"]);
+      const previousUsers = queryClient.getQueryData(usersQueries.all().queryKey);
 
-      queryClient.setQueryData(["users"], (oldUsers = []) => {
+      queryClient.setQueryData(usersQueries.all().queryKey, (oldUsers = []) => {
         return oldUsers.filter((user) => user.id !== userId);
       });
 
@@ -22,14 +23,14 @@ const useDeleteUserMutation = () => {
     },
 
     onError: (err, userId, context) => {
-      queryClient.setQueryData(["users"], context.previousUsers);
+      queryClient.setQueryData(usersQueries.all().queryKey, context.previousUsers);
 
       console.error(err.message);
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["users"],
+        queryKey: usersQueries.all().queryKey,
       });
     },
   });

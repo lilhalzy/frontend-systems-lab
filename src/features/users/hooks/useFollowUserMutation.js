@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { followUser } from "../services/usersService";
+import { usersQueries } from "../usersQueries";
 
 const useFollowUserMutation = () => {
   const queryClient = useQueryClient();
@@ -9,12 +10,12 @@ const useFollowUserMutation = () => {
 
     onMutate: async (userId) => {
       await queryClient.cancelQueries({
-        queryKey: ["users"],
+        queryKey: usersQueries.all().queryKey,
       });
 
       const previousUsers = queryClient.getQueryData(["users"]);
 
-      queryClient.setQueryData(["users"], (oldUsers = []) => {
+      queryClient.setQueryData(usersQueries.all().queryKey, (oldUsers = []) => {
         return oldUsers.map((user) =>
           user.id === userId
             ? {
@@ -29,12 +30,12 @@ const useFollowUserMutation = () => {
     },
 
     onError: (err, userId, context) => {
-      queryClient.setQueryData(["users"], context.previousUsers);
+      queryClient.setQueryData(usersQueries.all().queryKey, context.previousUsers);
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["users"],
+        queryKey: usersQueries.all().queryKey,
       });
     },
   });

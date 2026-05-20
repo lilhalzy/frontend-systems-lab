@@ -1,12 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchUsers } from "../services/usersService";
-import { usersKeys } from "../usersKeys";
+import { useQuery } from "@tanstack/react-query"
+import { usersQueries } from "../usersQueries"
 
 const useUsersQuery = () => {
-  return useQuery({
-    queryKey: usersKeys.all,
-    queryFn: fetchUsers,
-  });
-};
+  return useQuery(
+    usersQueries.all(),
+  )
+}
 
-export default useUsersQuery;
+export default useUsersQuery
