@@ -1,4 +1,4 @@
-import { fetchUsers } from "./services/usersService";
+import { fetchPaginatedUsers, fetchUsers } from "./services/usersService";
 import { usersKeys } from "./usersKeys";
 
 export const usersQueries = {
@@ -7,4 +7,9 @@ export const usersQueries = {
     queryFn: fetchUsers,
     staleTime: 1000 * 60 * 5,
   }),
+  paginated: (page) => ({
+    queryKey: usersKeys.paginated(page),
+    queryFn: () => fetchPaginatedUsers(page),
+    staleTime: 1000 * 60 * 5,
+  })
 }

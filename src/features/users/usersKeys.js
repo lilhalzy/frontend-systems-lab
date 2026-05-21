@@ -10,4 +10,10 @@ export const usersKeys = {
     ...usersKeys.all,
     id,
   ],
+
+  paginated: (page) => [
+    ...usersKeys.all,
+    'page',
+    page,
+  ]
 }

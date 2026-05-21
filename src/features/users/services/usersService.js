@@ -52,3 +52,21 @@ export const deleteUser = async(userId) => {
 
   return userId
 }
+
+export const fetchPaginatedUsers = async (page = 1) => {
+  await new Promise ((resolve) => 
+    setTimeout(resolve, 500)
+  )
+
+  const savedUsers = localStorage.getItem('users')
+  const users = savedUsers 
+    ? JSON.parse(savedUsers)
+    : []
+
+    const pageSize = 3
+
+    const start = (page - 1) * pageSize
+    const end = start + pageSize
+
+    return users.slice(start, end)
+}

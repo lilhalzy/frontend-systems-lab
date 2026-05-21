@@ -1,18 +1,21 @@
+import { useState } from "react";
 import ProfileCard from "../features/users/components/ProfileCard";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import useUserForm from "../features/users/hooks/useUserForm";
-import useUsersQuery from "../features/users/hooks/useUsersQuery";
 import useAddUserMutation from "../features/users/hooks/useAddUserMutation";
 import useFollowUserMutation from "../features/users/hooks/useFollowUserMutation";
 import useDeleteUserMutation from "../features/users/hooks/useDeleteUserMutation";
+import usePaginatedUsersQuery from "../features/users/hooks/usePaginatedUsersQuery";
 
 function Users() {
   const addUserMutation = useAddUserMutation();
   const followUserMutation = useFollowUserMutation();
   const deleteUserMutation = useDeleteUserMutation();
 
-  const { data: users = [], isLoading, error } = useUsersQuery();
+  const [page, setPage] = useState(1);
+
+  const {data: users = [], isLoading, error} = usePaginatedUsersQuery(page)
 
   const handleFollow = async (id) => {
     try {
@@ -68,7 +71,7 @@ function Users() {
           onChange={handleInputChange}
         />
 
-        <Button type="submit" disabled={addUserMutation.isPending}>
+        <Button type="button" disabled={addUserMutation.isPending}>
           {addUserMutation.isPending ? "Adding..." : "Add User"}
         </Button>
       </form>
@@ -85,6 +88,24 @@ function Users() {
           onDelete={() => handleDeleteUser(user.id)}
         />
       ))}
+      <div>
+        <Button
+          type="button"
+          disabled={page === 1}
+          onClick={() => 
+            setPage((prev) => prev - 1)
+          }>
+            Previous
+          </Button>
+        <span>Page {page}</span>
+        <Button
+          type="button"
+          onClick={() => 
+            setPage((prev) => prev + 1)
+          }>
+            Next
+        </Button>
+      </div>
     </section>
   );
 }
