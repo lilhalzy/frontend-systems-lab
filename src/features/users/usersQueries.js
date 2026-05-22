@@ -11,5 +11,7 @@ export const usersQueries = {
     queryKey: usersKeys.paginated(page),
     queryFn: () => fetchPaginatedUsers(page),
     staleTime: 1000 * 60 * 5,
+
+    placeholderData: (prevData) => prevData
   })
 }

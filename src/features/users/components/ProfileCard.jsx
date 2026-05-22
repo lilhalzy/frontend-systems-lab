@@ -8,7 +8,7 @@ const ProfileCard = ({
   onFollow,
   onDelete,
   pending,
-}) => {
+  }) => {
   return (
     <section>
       <h2>{name}</h2>

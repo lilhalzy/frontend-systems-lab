@@ -1,55 +1,66 @@
-import { useState } from "react";
-import ProfileCard from "../features/users/components/ProfileCard";
-import Button from "../components/ui/Button";
-import Input from "../components/ui/Input";
-import useUserForm from "../features/users/hooks/useUserForm";
-import useAddUserMutation from "../features/users/hooks/useAddUserMutation";
-import useFollowUserMutation from "../features/users/hooks/useFollowUserMutation";
-import useDeleteUserMutation from "../features/users/hooks/useDeleteUserMutation";
-import usePaginatedUsersQuery from "../features/users/hooks/usePaginatedUsersQuery";
+import { useState, useEffect } from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import ProfileCard from "../features/users/components/ProfileCard"
+import Button from "../components/ui/Button"
+import Input from "../components/ui/Input"
+import useUserForm from "../features/users/hooks/useUserForm"
+import useAddUserMutation from "../features/users/hooks/useAddUserMutation"
+import useFollowUserMutation from "../features/users/hooks/useFollowUserMutation"
+import useDeleteUserMutation from "../features/users/hooks/useDeleteUserMutation"
+import usePaginatedUsersQuery from "../features/users/hooks/usePaginatedUsersQuery"
+import { usersQueries } from "../features/users/usersQueries"
 
 function Users() {
-  const addUserMutation = useAddUserMutation();
-  const followUserMutation = useFollowUserMutation();
-  const deleteUserMutation = useDeleteUserMutation();
-
+  const addUserMutation = useAddUserMutation()
+  const followUserMutation = useFollowUserMutation()
+  const deleteUserMutation = useDeleteUserMutation()
+  
   const [page, setPage] = useState(1);
-
   const {data: users = [], isLoading, error} = usePaginatedUsersQuery(page)
+  
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    const nextPage = page + 1
+
+    queryClient.prefetchQuery(
+      usersQueries.paginated(nextPage)
+    )
+  }, [page, queryClient])
 
   const handleFollow = async (id) => {
     try {
-      await followUserMutation.mutateAsync(id);
+      await followUserMutation.mutateAsync(id)
     } catch (err) {
       console.error(err.message);
     }
-  };
+  }
 
   const handleDeleteUser = async (id) => {
     try {
-      await deleteUserMutation.mutateAsync(id);
+      await deleteUserMutation.mutateAsync(id)
     } catch (err) {
       console.error(err.message);
     }
-  };
+  }
 
   const addUser = async (newUser) => {
     try {
-      await addUserMutation.mutateAsync(newUser);
+      await addUserMutation.mutateAsync(newUser)
     } catch (err) {
-      console.error(err.message);
+      console.error(err.message)
     }
-  };
+  }
 
   const { formData, formError, handleInputChange, handleSubmit } =
-    useUserForm(addUser);
+    useUserForm(addUser)
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p>Loading...</p>
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <p>{error}</p>
   }
 
   return (
@@ -71,7 +82,7 @@ function Users() {
           onChange={handleInputChange}
         />
 
-        <Button type="button" disabled={addUserMutation.isPending}>
+        <Button type="submit" disabled={addUserMutation.isPending}>
           {addUserMutation.isPending ? "Adding..." : "Add User"}
         </Button>
       </form>
@@ -107,7 +118,7 @@ function Users() {
         </Button>
       </div>
     </section>
-  );
+  )
 }
 
-export default Users;
+export default Users
