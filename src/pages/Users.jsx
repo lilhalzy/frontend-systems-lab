@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react"
-import { useQueryClient } from "@tanstack/react-query"
 import ProfileCard from "../features/users/components/ProfileCard"
 import Button from "../components/ui/Button"
 import Input from "../components/ui/Input"
@@ -7,26 +5,23 @@ import useUserForm from "../features/users/hooks/useUserForm"
 import useAddUserMutation from "../features/users/hooks/useAddUserMutation"
 import useFollowUserMutation from "../features/users/hooks/useFollowUserMutation"
 import useDeleteUserMutation from "../features/users/hooks/useDeleteUserMutation"
-import usePaginatedUsersQuery from "../features/users/hooks/usePaginatedUsersQuery"
-import { usersQueries } from "../features/users/usersQueries"
+import useInfiniteUsersQuery from "../features/users/hooks/useInfiniteUsersQuery"
 
 function Users() {
   const addUserMutation = useAddUserMutation()
   const followUserMutation = useFollowUserMutation()
   const deleteUserMutation = useDeleteUserMutation()
   
-  const [page, setPage] = useState(1);
-  const {data: users = [], isLoading, error} = usePaginatedUsersQuery(page)
-  
-  const queryClient = useQueryClient()
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteUsersQuery()
 
-  useEffect(() => {
-    const nextPage = page + 1
-
-    queryClient.prefetchQuery(
-      usersQueries.paginated(nextPage)
-    )
-  }, [page, queryClient])
+  const users = data?.pages.flat() ?? []
 
   const handleFollow = async (id) => {
     try {
@@ -102,20 +97,14 @@ function Users() {
       <div>
         <Button
           type="button"
-          disabled={page === 1}
+          disabled={hasNextPage || isFetchingNextPage}
           onClick={() => 
-            setPage((prev) => prev - 1)
+            fetchNextPage()
           }>
-            Previous
+            {
+              isFetchingNextPage ? 'Loading more...' : 'Load More'
+            }
           </Button>
-        <span>Page {page}</span>
-        <Button
-          type="button"
-          onClick={() => 
-            setPage((prev) => prev + 1)
-          }>
-            Next
-        </Button>
       </div>
     </section>
   )
