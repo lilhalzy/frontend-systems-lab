@@ -1,44 +1,49 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { followUser } from "../services/usersService";
-import { usersQueries } from "../usersQueries";
+import { useMutation, useQueryClient} from '@tanstack/react-query'
+
+import { followUser } from '../services/usersService'
 
 const useFollowUserMutation = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
 
-  return useMutation({
-    mutationFn: followUser,
+    return useMutation({
+      mutationFn: followUser,
 
-    onMutate: async (userId) => {
-      await queryClient.cancelQueries({
-        queryKey: usersQueries.all().queryKey,
-      });
+      onMutate: async (userId) => {
+        await queryClient.cancelQueries({
+          queryKey: ['users', 'infinite'],
+        })
 
-      const previousUsers = queryClient.getQueryData(["users"]);
+        const previousUsers = queryClient.getQueryData(['users','infinite',])
 
-      queryClient.setQueryData(usersQueries.all().queryKey, (oldUsers = []) => {
-        return oldUsers.map((user) =>
-          user.id === userId
-            ? {
-                ...user,
-                followers: user.followers + 1,
-              }
-            : user,
-        );
-      });
+        queryClient.setQueryData(['users', 'infinite'], (oldData) => {
+            if (!oldData) return oldData
 
-      return { previousUsers };
-    },
+            return {
+              ...oldData,
 
-    onError: (err, userId, context) => {
-      queryClient.setQueryData(usersQueries.all().queryKey, context.previousUsers);
-    },
+              pages: oldData.pages.map((page) => page.map((user) =>
+                        user.id === userId ? { ...user, followers: user.followers + 1} : user
+                    )
+                ),
+            }
+          }
+        )
 
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: usersQueries.all().queryKey,
-      });
-    },
-  });
-};
+        return { previousUsers }
+      },
 
-export default useFollowUserMutation;
+      onError: ( err, userId, context ) => {
+        queryClient.setQueryData(['users', 'infinite'], context.previousUsers)
+        
+        console.error(err.message)
+      },
+
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: ['users','infinite'],
+        })
+      },
+    })
+  }
+
+export default useFollowUserMutation

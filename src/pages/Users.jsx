@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import ProfileCard from "../features/users/components/ProfileCard"
 import Button from "../components/ui/Button"
 import Input from "../components/ui/Input"
@@ -11,6 +12,7 @@ function Users() {
   const addUserMutation = useAddUserMutation()
   const followUserMutation = useFollowUserMutation()
   const deleteUserMutation = useDeleteUserMutation()
+  const loadMoreRef = useRef(null)
   
   const {
     data,
@@ -21,13 +23,35 @@ function Users() {
     isFetchingNextPage,
   } = useInfiniteUsersQuery()
 
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const firstEntry = entries[0]
+
+      if (firstEntry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    })
+
+    const currentRef = loadMoreRef.current
+
+    if (currentRef) {
+      observer.observe(currentRef)
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef)
+      }
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
+
   const users = data?.pages.flat() ?? []
 
   const handleFollow = async (id) => {
     try {
       await followUserMutation.mutateAsync(id)
     } catch (err) {
-      console.error(err.message);
+      console.error(err.message)
     }
   }
 
@@ -35,7 +59,7 @@ function Users() {
     try {
       await deleteUserMutation.mutateAsync(id)
     } catch (err) {
-      console.error(err.message);
+      console.error(err.message)
     }
   }
 
@@ -61,6 +85,7 @@ function Users() {
   return (
     <section>
       <h1>Users Page</h1>
+      <h3>Try to add user and mess around with it</h3>
 
       <form onSubmit={handleSubmit}>
         <Input
@@ -83,8 +108,9 @@ function Users() {
       </form>
 
       {formError && <p>{formError}</p>}
-      {users.map((user) => (
-        <ProfileCard
+      {users.map((user) => 
+        (
+          <ProfileCard
           key={user.id}
           name={user.name}
           role={user.role}
@@ -92,19 +118,13 @@ function Users() {
           followers={user.followers}
           onFollow={() => handleFollow(user.id)}
           onDelete={() => handleDeleteUser(user.id)}
-        />
-      ))}
-      <div>
-        <Button
-          type="button"
-          disabled={hasNextPage || isFetchingNextPage}
-          onClick={() => 
-            fetchNextPage()
-          }>
-            {
-              isFetchingNextPage ? 'Loading more...' : 'Load More'
-            }
-          </Button>
+          />
+        )
+      )}
+      <div ref={loadMoreRef}>
+        {
+          isFetchingNextPage ? 'Loading more' : ''
+        }
       </div>
     </section>
   )

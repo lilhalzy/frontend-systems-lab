@@ -1,39 +1,46 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteUser } from "../services/usersService";
-import { usersQueries } from "../usersQueries";
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteUser } from '../services/usersService'
 
 const useDeleteUserMutation = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
 
-  return useMutation({
-    mutationFn: deleteUser,
+    return useMutation({
+      mutationFn: deleteUser,
 
-    onMutate: async (userId) => {
-      await queryClient.cancelQueries({
-        queryKey: usersQueries.all().queryKey,
-      });
+      onMutate: async (userId) => {
+        await queryClient.cancelQueries({
+          queryKey: ['users', 'infinite'],
+        })
 
-      const previousUsers = queryClient.getQueryData(usersQueries.all().queryKey);
+        const previousUsers =
+          queryClient.getQueryData(['users', 'infinite'])
 
-      queryClient.setQueryData(usersQueries.all().queryKey, (oldUsers = []) => {
-        return oldUsers.filter((user) => user.id !== userId);
-      });
+        queryClient.setQueryData(['users', 'infinite'], (oldData) => {
+            if (!oldData) return oldData
 
-      return { previousUsers };
-    },
+            return {
+              ...oldData,
 
-    onError: (err, userId, context) => {
-      queryClient.setQueryData(usersQueries.all().queryKey, context.previousUsers);
+              pages: oldData.pages.map((page) => page.filter((user) => user.id !== userId ))
+            }
+          }
+        )
 
-      console.error(err.message);
-    },
+        return { previousUsers}
+      },
 
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: usersQueries.all().queryKey,
-      });
-    },
-  });
-};
+      onError: ( err, userId, context ) => {
+        queryClient.setQueryData(['users', 'infinite'], context.previousUsers)
 
-export default useDeleteUserMutation;
+        console.error(err.message)
+      },
+
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: ['users','infinite'],
+        })
+      },
+    })
+  }
+
+export default useDeleteUserMutation
