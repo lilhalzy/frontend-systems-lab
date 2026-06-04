@@ -51,6 +51,7 @@ The development history represents a deep-dive timeline through React's data man
 
 ### Architecture Diagram
 
+```text
 UI Components
       │
       ▼
@@ -64,11 +65,13 @@ Service Layer
       │
       ▼
 Mock API / Data Source
+```
 
 ---
 
 ### Current Architecture
 
+```text
 src/
 ├── components/
 ├── pages/
@@ -78,6 +81,7 @@ src/
 │       ├── hooks/
 │       └── services/
 └── App.jsx
+```
 
 ---
 
