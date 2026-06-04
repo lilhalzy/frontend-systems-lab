@@ -70,3 +70,19 @@ export const fetchPaginatedUsers = async (page = 1) => {
 
     return users.slice(start, end)
 }
+
+export const randomFollowerGrowth = async () => {
+  const savedUsers = localStorage.getItem('users')
+  const users = savedUsers ? JSON.parse(savedUsers) : []
+
+  if (users.length === 0) return
+
+  const randomIdx = Math.floor(Math.random() * users.length)
+
+  users[randomIdx] = {
+    ...users[randomIdx],
+    followers: users[randomIdx].followers + 1
+  }
+
+  localStorage.setItem('users', JSON.stringify(users))
+}

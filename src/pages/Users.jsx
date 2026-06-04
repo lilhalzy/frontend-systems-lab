@@ -7,6 +7,7 @@ import useAddUserMutation from "../features/users/hooks/useAddUserMutation"
 import useFollowUserMutation from "../features/users/hooks/useFollowUserMutation"
 import useDeleteUserMutation from "../features/users/hooks/useDeleteUserMutation"
 import useInfiniteUsersQuery from "../features/users/hooks/useInfiniteUsersQuery"
+import { randomFollowerGrowth } from "../features/users/services/usersService"
 
 function Users() {
   const addUserMutation = useAddUserMutation()
@@ -44,6 +45,16 @@ function Users() {
       }
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      randomFollowerGrowth()
+    }, 7000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
 
   const users = data?.pages.flat() ?? []
 
