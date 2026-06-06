@@ -71,6 +71,18 @@ export const fetchPaginatedUsers = async (page = 1) => {
     return users.slice(start, end)
 }
 
+const listeners = []
+
+export const subscribeToFollowerGrowth = (callback) => {
+  listeners.push(callback)
+
+  return () => {
+    const idx = listeners.indexOf(callback)
+
+    if (idx !== -1) return listeners.splice(idx, 1)
+  }
+}
+
 export const randomFollowerGrowth = async () => {
   const savedUsers = localStorage.getItem('users')
   const users = savedUsers ? JSON.parse(savedUsers) : []
@@ -79,10 +91,14 @@ export const randomFollowerGrowth = async () => {
 
   const randomIdx = Math.floor(Math.random() * users.length)
 
-  users[randomIdx] = {
-    ...users[randomIdx],
-    followers: users[randomIdx].followers + 1
-  }
+  const user = users[randomIdx]
+  user.followers += 1
 
   localStorage.setItem('users', JSON.stringify(users))
+
+  listeners.forEach((listener) => 
+    listener({
+      userId: users.id
+    })
+  )
 }

@@ -7,7 +7,8 @@ import useAddUserMutation from "../features/users/hooks/useAddUserMutation"
 import useFollowUserMutation from "../features/users/hooks/useFollowUserMutation"
 import useDeleteUserMutation from "../features/users/hooks/useDeleteUserMutation"
 import useInfiniteUsersQuery from "../features/users/hooks/useInfiniteUsersQuery"
-import { randomFollowerGrowth } from "../features/users/services/usersService"
+import { randomFollowerGrowth, subscribeToFollowerGrowth} from "../features/users/services/usersService"
+import { useQueryClient } from "@tanstack/react-query"
 
 function Users() {
   const addUserMutation = useAddUserMutation()
@@ -23,6 +24,8 @@ function Users() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteUsersQuery()
+
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -65,6 +68,33 @@ function Users() {
       console.error(err.message)
     }
   }
+
+  useEffect(() => {
+    const unsubscribe = subscribeToFollowerGrowth(({ userId }) => {
+        queryClient.setQueryData(['users', 'infinite'],
+          (oldData) => {
+            if (!oldData) return oldData
+
+            return {
+              ...oldData,
+
+              pages:
+                oldData.pages.map((page) => page.map(
+                  (user) => user.id === userId ? {
+                    ...user,
+                    followers: user.followers + 1,
+                    }
+                    : user
+                  )
+                ),
+              }
+            }
+          )
+        }
+      )
+
+    return unsubscribe
+  }, [queryClient])
 
   const handleDeleteUser = async (id) => {
     try {
