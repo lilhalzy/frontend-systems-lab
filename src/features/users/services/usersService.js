@@ -91,8 +91,10 @@ export const randomFollowerGrowth = async () => {
 
   const randomIdx = Math.floor(Math.random() * users.length)
 
-  const user = users[randomIdx]
-  user.followers += 1
+  users[randomIdx] = {
+    ...users[randomIdx],
+    followers: users[randomIdx].followers + 1,
+  }
 
   localStorage.setItem('users', JSON.stringify(users))
 
