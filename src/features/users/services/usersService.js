@@ -1,3 +1,12 @@
+// const listeners = []
+
+export const emitUserEvent = (payload) => {
+  localStorage.setItem('user-events', JSON.stringify({
+    ...payload,
+    timestamp: Date.now(),
+  }))
+}
+
 export const fetchUsers =  async () => {
   await new Promise((resolve) => setTimeout(resolve, 1000))
   const savedUsers = localStorage.getItem('users')
@@ -16,40 +25,55 @@ export const createUser = async(newUser) => {
 
   const savedUsers = localStorage.getItem('users')
   const users = savedUsers 
-    ? JSON.parse(savedUsers)
-    : []
-  const updatedUsers = [...users, newUser] 
+  ? JSON.parse(savedUsers)
+  : []
+  const updatedUsers = [newUser, ...users] 
 
   localStorage.setItem('users', JSON.stringify(updatedUsers))
 
+  emitUserEvent({
+    type: 'ADD',
+    user: newUser,
+  })
+  
   return newUser
 }
 
 export const followUser = async(userId) => {
-  await new Promise((resolve) => setTimeout(resolve, 500))
-
+  await new Promise((resolve) => setTimeout(resolve, 50))
+  
   const savedUsers = localStorage.getItem('users')
   const users = savedUsers ? JSON.parse(savedUsers) : []
   const updatedUsers = users.map(
     (user) => user.id === userId
-      ? { ...user, followers: user.followers + 1 }
+    ? { ...user, followers: user.followers + 1 }
       : user
-  )
-
+    )
+    
   localStorage.setItem('users', JSON.stringify(updatedUsers))
 
+  emitUserEvent({
+    type: 'FOLLOW',
+    userId,
+  })
+  
   return updatedUsers
 }
 
 export const deleteUser = async(userId) => {
-  await new Promise((resolve) => setTimeout(resolve, 500))
-
+  await new Promise((resolve) => setTimeout(resolve, 50))
+  
   const savedUsers = localStorage.getItem('users')
   const users = savedUsers ? JSON.parse(savedUsers) : []  
   const updatedUsers = users.filter((user) => user.id !== userId)
-
+  
   localStorage.setItem('users', JSON.stringify(updatedUsers))
 
+  emitUserEvent({
+    type: 'DELETE',
+    userId,
+  })
+  
   return userId
 }
 
@@ -60,47 +84,44 @@ export const fetchPaginatedUsers = async (page = 1) => {
 
   const savedUsers = localStorage.getItem('users')
   const users = savedUsers 
-    ? JSON.parse(savedUsers)
-    : []
+  ? JSON.parse(savedUsers)
+  : []
 
-    const pageSize = 3
+  const pageSize = 3
 
-    const start = (page - 1) * pageSize
-    const end = start + pageSize
+  const start = (page - 1) * pageSize
+  const end = start + pageSize
 
-    return users.slice(start, end)
+  return users.slice(start, end)
 }
 
-const listeners = []
-
-export const subscribeToFollowerGrowth = (callback) => {
-  listeners.push(callback)
-
-  return () => {
-    const idx = listeners.indexOf(callback)
-
-    if (idx !== -1) return listeners.splice(idx, 1)
-  }
-}
+// export const subscribeToFollowerGrowth = (callback) => {
+//   listeners.push(callback)
+  
+//   return () => {
+//     const idx = listeners.indexOf(callback)
+    
+//     if (idx !== -1) return listeners.splice(idx, 1)
+//     }
+// }
 
 export const randomFollowerGrowth = async () => {
   const savedUsers = localStorage.getItem('users')
   const users = savedUsers ? JSON.parse(savedUsers) : []
-
+  
   if (users.length === 0) return
-
+  
   const randomIdx = Math.floor(Math.random() * users.length)
-
+  
   users[randomIdx] = {
     ...users[randomIdx],
     followers: users[randomIdx].followers + 1,
   }
-
+  
   localStorage.setItem('users', JSON.stringify(users))
-
-  listeners.forEach((listener) => 
-    listener({
-      userId: users.id
-    })
-  )
+  
+  emitUserEvent({
+    type: 'FOLLOW',
+    userId: users[randomIdx].id
+  })
 }
