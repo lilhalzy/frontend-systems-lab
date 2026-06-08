@@ -12,15 +12,15 @@ This project is continuously refactored as new architectural patterns and fronte
 
 The application has evolved past standard tutorial-level paradigms, implementing production-grade patterns:
 
-### Core Engineering & State Paradigms
+### v1.0.0 Core Engineering & State Paradigms
 * **Feature-Oriented Architecture:** Codebase organized strictly by feature domain (`features/users/`) rather than generic file types, optimizing scalability.
 * **Service Layer Separation:** Complete decoupling of HTTP/API network request payloads from UI rendering files (`services/usersService.js`).
-* **Custom React Hooks:** Encapsulation of complex local workflows (e.g., `useUserForm`) and async queries into reusable, clean modules.
+* **Custom React Hooks:** Encapsulation of complex local workflows (e.g., `useUserForm`) and async queries into reusable, clean modules with implemented core component layouts, structural forms, and simulated user state mutations.
 
-### High-Performance Server State (TanStack Query)
+### v2.0.0 High-Performance Server State (TanStack Query)
 * **Query Factories:** Centralized, structured management of query keys to eliminate key typos and optimize caching predictability.
-* **Infinite Queries & Infinite Scroll:** Implemented robust sequential pagination mapping (`getNextPageParam`) allowing users to dynamically stream large datasets.
-* **Resilient Optimistic Updates:** State updates for user mutations (**Add**, **Delete**, **Follow**) execute instantaneously in the UI, backed by automatic context snapshots and robust query rollback patterns (`onMutate` / `onError`) in case of network disruptions.
+* **Optimistic Cache Management:** Applied deep immutable data patching patterns across active memory stores (`...spread` operational copies over direct reference mutation) to prevent component render freezing and guarantee deterministic UI updates.
+* **Cache Architecture Enhancements:** Abstracted raw browser APIs (`IntersectionObserver`, `setInterval`) out of the presentation layer into highly cohesive custom hooks (`useInfiniteScroll`, `useInterval`).
 
 ---
 
@@ -94,3 +94,42 @@ Make sure you have Node.js installed on your machine.
 1. Clone the repository:
    ```bash
    git clone [https://github.com/lilhalzy/vite_setup_react.git](https://github.com/lilhalzy/vite_setup_react.git)
+
+# Frontend Systems Lab
+
+A progressive sandbox engineering environment focused on optimizing client-side performance, state synchronizations, reusable React abstractions, and real-time event-driven streaming.
+
+---
+
+## 🚀 Lab Roadmap & Version Evolution
+
+### v1.0.0 — Basic UI & State Foundation
+* Implemented core component layouts, structural forms, and simulated user state mutations.
+* Developed decoupled atomic design patterns using custom `<Input />`, `<Button />`, and `<ProfileCard />` components.
+
+### v2.0.0 — Data Caching & Performance Optimization
+* Integrated robust asynchronous data management using server-state fetching strategies.
+* **Cache Architecture Enhancements:** Abstracted raw browser APIs (`IntersectionObserver`, `setInterval`) out of the presentation layer into highly cohesive custom hooks (`useInfiniteScroll`, `useInterval`).
+* **Optimistic Cache Management:** Applied deep immutable data patching patterns across active memory stores (`...spread` operational copies over direct reference mutation) to prevent component render freezing and guarantee deterministic UI updates.
+* *Reference Implementation:* See history adjustments in [Commit `80765bc`](https://github.com/lilhalzy/frontend-systems-lab/commit/80765bcbeb6116aab3f596c8d34e52bda88b0479).
+
+### v3.0.0 — Real-Time WebSocket Streaming (Current)
+* Migrated from simulated intervals to a true decoupled client-server architecture using full-duplex protocol channels.
+* **Monorepo Split:** Restructured the repository workspace into a cleaner isolated package tree (`/client` running Vite/React and `/websocket-server` running a standalone Node.js server instance).
+* **Bi-directional Communication:** Deployed a native `ws://` data layer enabling real-time JSON frame processing. The backend now dynamically broadcasts automated background growth cycles (e.g., intermittent automated subscriber metrics) down to listening client nodes via continuous data pipelines.
+
+---
+
+## 🛠️ Project Architecture
+
+```text
+frontend-systems-lab/
+├── client/                 # Vite + React Frontend Application
+│   ├── public/             # Static Assets
+│   └── src/                # Modular Source Code
+│       ├── components/     # UI Design System Components
+│       ├── features/users/ # Isolated domain contexts (hooks, keys, queries)
+│       └── hooks/          # Globally resilient layout & event hooks
+├── websocket-server/       # Standalone Node.js WS Event Engine
+│   └── server.js           # Full-duplex connection listener & broadcaster
+└── README.md
