@@ -9,12 +9,14 @@ import useDeleteUserMutation from "../features/users/hooks/useDeleteUserMutation
 import useInfiniteUsersQuery from "../features/users/hooks/useInfiniteUsersQuery"
 import { randomFollowerGrowth, subscribeToFollowerGrowth} from "../features/users/services/usersService"
 import { useQueryClient } from "@tanstack/react-query"
+import useUsersSync from "../features/users/hooks/useUsersSync"
 
 function Users() {
   const addUserMutation = useAddUserMutation()
   const followUserMutation = useFollowUserMutation()
   const deleteUserMutation = useDeleteUserMutation()
   const loadMoreRef = useRef(null)
+  useUsersSync()
   
   const {
     data,
@@ -148,20 +150,34 @@ function Users() {
         </Button>
       </form>
 
+      <p style={{ color: '#666', fontStyle: 'italic', marginBottom: '1.5rem' }}>
+      Note: The follower count of users may gradually increase randomly (refer to {` `}
+        <a
+          href="https://github.com/lilhalzy/frontend-systems-lab/commit/6c750df6b6d8993b4b12b214ec1ecd10d064df8b"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{textDecoration: 'underline', color: '#888'}}
+        >
+          6c750df
+        </a>)
+      </p>
+
       {formError && <p>{formError}</p>}
       {users.map((user) => 
         (
-          <ProfileCard
-          key={user.id}
-          name={user.name}
-          role={user.role}
-          online={user.online}
-          followers={user.followers}
-          onFollow={() => handleFollow(user.id)}
-          onDelete={() => handleDeleteUser(user.id)}
-          />
+          <div key={user.id} style={{ marginBottom: '1.5rem',  padding: '1rem', border: '1px solid #ccc' }}>
+            <ProfileCard
+              name={user.name}
+              role={user.role}
+              online={user.online}
+              followers={user.followers}
+              onFollow={() => handleFollow(user.id)}
+              onDelete={() => handleDeleteUser(user.id)}
+            />
+          </div>
         )
-      )}
+      )
+    }
       <div ref={loadMoreRef}>
         {
           isFetchingNextPage ? 'Loading more' : ''
