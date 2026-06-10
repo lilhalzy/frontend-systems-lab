@@ -173,4 +173,4 @@ Make sure you have Node.js installed on your machine.
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/lilhalzy/vite_setup_react.git](https://github.com/lilhalzy/vite_setup_react.git)
+   git clone [https://github.com/lilhalzy/vite_setup_react.git](https://github.com/lilhalzy/frontend-systems-lab.git)
