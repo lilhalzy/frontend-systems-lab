@@ -62,5 +62,3 @@ const useUsersSync = () => {
 }
 
 export default useUsersSync
-
-// [ BUG | 1:43PM ] - when opened two tabs, the added user appears at the top initially and after a refresh it will be appears at the bottom, later, it's vice-versa. appears at the bottom and then appears at the top, but when in a single tab, adding new user will always appear at the bottom

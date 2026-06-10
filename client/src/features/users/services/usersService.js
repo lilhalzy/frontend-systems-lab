@@ -1,5 +1,3 @@
-// const listeners = []
-
 export const emitUserEvent = (payload) => {
   localStorage.setItem('user-events', JSON.stringify({
     ...payload,
@@ -94,16 +92,6 @@ export const fetchPaginatedUsers = async (page = 1) => {
 
   return users.slice(start, end)
 }
-
-// export const subscribeToFollowerGrowth = (callback) => {
-//   listeners.push(callback)
-  
-//   return () => {
-//     const idx = listeners.indexOf(callback)
-    
-//     if (idx !== -1) return listeners.splice(idx, 1)
-//     }
-// }
 
 export const randomFollowerGrowth = async () => {
   const savedUsers = localStorage.getItem('users')
