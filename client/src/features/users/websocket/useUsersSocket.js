@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { connectSocket, sendEvent }from '../services/socketService'
+import { connectSocket }from '../services/socketService'
+import { socketHandlers } from './socketHandlers'
 
 const useUsersSocket = () => {
   const queryClient = useQueryClient()
@@ -9,32 +10,21 @@ const useUsersSocket = () => {
     const socket = connectSocket()
     socket.onopen = () => {
       console.log('Socket connected')
-
-      sendEvent({
-        type: 'FOLLOW_REQUEST',
-        userId: 1,
-      })
     }
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
+      
+      console.log('Received socket event:', message)
+      
+      const handler = socketHandlers[message.type]
 
-      switch (message.type) {
-        case 'FOLLOW':
-          queryClient.setQueryData(['users', 'infinite'], (oldData) => {
-            if(!oldData) return oldData
-
-            return {
-              ...oldData,
-              pages: oldData.pages.map((page) => page.map((user) => 
-                user.id === message.userId ? {...user, followers: user.followers + 1} : user
-              )),
-            }
-          })
-          break
-
-          default:
-            break
+      if (handler) {
+        handler(queryClient, message)
       }
+    }
+
+    socket.onclose = () => {
+      console.log('Socket disconnected')
     }
 
     return () => {
