@@ -4,9 +4,8 @@ A highly optimized React application focused on modern server-state synchronizat
 
 This project marks a comprehensive transition from traditional client-side data management (Context/Reducer architectures) to a highly performant, resilient architecture powered by **TanStack Query**.
 
-This project is continuously refactored as new architectural patterns and frontend engineering concepts are explored.
+__*This project is continuously refactored as new architectural patterns and frontend engineering concepts are explored.*__
 
----
 
 ## Key Architectural Achievements
 
@@ -25,7 +24,6 @@ This project is continuously refactored as new architectural patterns and fronte
 * **Monorepo Split:** Restructured the repository workspace into a cleaner isolated package tree (`/client` running Vite/React and `/websocket-server` running a standalone Node.js server instance).
 * **Bi-directional Communication:** Deployed a native `ws://` data layer enabling real-time JSON frame processing. The backend now dynamically broadcasts automated background growth cycles (e.g., intermittent automated subscriber metrics) down to listening client nodes via continuous data pipelines.
 
----
 
 ## Tech Stack & Patterns Covered
 
@@ -33,9 +31,9 @@ This project is continuously refactored as new architectural patterns and fronte
 * **Server-State Orchestrator:** TanStack Query v5 (React Query)
 * **Historical Architecture Iterations:** Local component state, Context API, useReducer state management, TanStack Query server-state architecture
 
-These implementations were developed as part of the project's evolution and are retained in commit history for comparison and learning purposes.
+_These implementations were developed as part of the project's evolution and are retained in commit history for comparison and learning purposes._
 
----
+
 
 ## Progress Tracking & Milestones
 
@@ -50,7 +48,6 @@ The development history represents a deep-dive timeline through React's data man
 * [x] Component Extraction
 * [x] Custom Hooks
 
----
 
 ### State Management
 
@@ -60,7 +57,6 @@ The development history represents a deep-dive timeline through React's data man
 * [x] UsersContext Architecture
 * [x] Reducer-Based CRUD Flow
 
----
 
 ### TanStack Query Foundations
 
@@ -72,7 +68,6 @@ The development history represents a deep-dive timeline through React's data man
 * [x] Query Factory Pattern
 * [x] Feature-Oriented Query Organization
 
----
 
 ### Optimistic Updates
 
@@ -82,7 +77,6 @@ The development history represents a deep-dive timeline through React's data man
 * [x] Rollback on Error
 * [x] Cache Manipulation with setQueryData
 
----
 
 ### Infinite Data Loading
 
@@ -93,7 +87,6 @@ The development history represents a deep-dive timeline through React's data man
 * [x] Intersection Observer
 * [x] Cache Shape Handling for Infinite Queries
 
----
 
 ### Real-Time Data Synchronization
 
@@ -105,7 +98,6 @@ The development history represents a deep-dive timeline through React's data man
 * [x] Browser Storage Event Integration
 * [x] Domain Event Architecture
 
----
 
 ### WebSocket Foundations
 
@@ -120,7 +112,6 @@ The development history represents a deep-dive timeline through React's data man
 * [x] WebSocket → React Query Integration
 * [x] Real-Time Cache Updates via WebSocket Events
 
----
 
 ### Architecture Patterns Learned
 
@@ -139,13 +130,17 @@ The development history represents a deep-dive timeline through React's data man
 ### Current Architecture
 
 ```
-User Action / Server Event
+Command
 ↓
-Domain Event
+Server
 ↓
-React Query Cache
+Event
 ↓
-Automatic UI Re-render
+Clients
+↓
+Cache
+↓
+Render
 ```
 ---
 
@@ -163,8 +158,6 @@ frontend-systems-lab/
 └── README.md
 ```
 
----
-
 ## Getting Started & Local Development
 
 ### Prerequisites
@@ -173,4 +166,12 @@ Make sure you have Node.js installed on your machine.
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/lilhalzy/vite_setup_react.git](https://github.com/lilhalzy/frontend-systems-lab.git)
+   git clone https://github.com/lilhalzy/frontend-systems-lab.git
+2. Install client-side dependencies:
+    ```bash
+    cd client
+    npm install
+3. Install WebSocket server dependencies:
+    ```bash
+    cd ../websocket-server
+    npm install
