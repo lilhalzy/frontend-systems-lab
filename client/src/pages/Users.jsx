@@ -9,7 +9,7 @@ import useDeleteUserMutation from "../features/users/hooks/useDeleteUserMutation
 import useInfiniteUsersQuery from "../features/users/hooks/useInfiniteUsersQuery"
 import { randomFollowerGrowth, } from "../features/users/services/usersService"
 import useUsersSync from "../features/users/hooks/useUsersSync"
-import useUsersSocket from "../features/users/hooks/useUsersSocket"
+import useUsersSocket from "../features/users/websocket/useUsersSocket"
 
 function Users() {
   const addUserMutation = useAddUserMutation()
