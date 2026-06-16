@@ -1,13 +1,13 @@
+const users = require('./data/users')
 const WebSocket = require('ws')
 
 const wss = new WebSocket.Server({ port: 8080 })
 console.log('WebSocket server started on port 8080')
 
 wss.on('connection', (ws) => {
-  console.log('Client connected')
-
   ws.send(JSON.stringify({
-    type: 'CONNECTED',
+    type: 'USERS_SYNC',
+    users,
   }))
 
   ws.on('message', (message) => {
@@ -17,15 +17,24 @@ wss.on('connection', (ws) => {
 
     switch (event.type) {
       case 'FOLLOW_REQUEST':
-        wss.clients.forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({
-              type: 'FOLLOW',
-              userId: event.userId,
-            }))
+        const user = users.find((user) => user.id === event.userId)
+
+          if (!user) return
+
+          user.followers += 1
+
+          const followEvent = {
+            type: 'FOLLOW',
+            userId: user.id,
+            followers: user.followers,
           }
-        })
-        
+
+          wss.clients.forEach((client) => {
+              if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(followEvent))
+              }
+            }
+          )
         break
       }
     })
