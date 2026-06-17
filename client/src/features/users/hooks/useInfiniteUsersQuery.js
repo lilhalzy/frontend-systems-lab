@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
-import { fetchPaginatedUsers } from "../services/usersService"
+// import { fetchPaginatedUsers } from "../services/usersService"
 
 const useInfiniteUsersQuery = () => {
   return useInfiniteQuery({
@@ -8,10 +8,9 @@ const useInfiniteUsersQuery = () => {
       'infinite',
     ],
 
-    queryFn: ({
-      pageParam = 1
-    }) => fetchPaginatedUsers(pageParam),
-
+    // queryFn: ({pageParam = 1}) => fetchPaginatedUsers(pageParam),
+    queryFn: async () => [],
+    enabled: false,
     initialPageParam: 1,
 
     getNextPageParam: (lastPage, allPages) => {

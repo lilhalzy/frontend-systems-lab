@@ -40,7 +40,6 @@ wss.on('connection', (ws) => {
     })
 
   ws.on('close', () => {
-    clearInterval(interval)
     console.log('Client disconnected')
   })
 })
